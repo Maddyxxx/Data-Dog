@@ -37,7 +37,7 @@ func TestWriteTodb1(t *testing.T) {
 	}
 }
 
-// a failing test case
+// a successful case
 func TestReadAllData(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {

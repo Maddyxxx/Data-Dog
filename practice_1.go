@@ -35,7 +35,8 @@ func WriteTodb(db *sql.DB, data Data) (err error) {
 			tx.Rollback()
 		}
 	}()
-	if _, err = tx.Exec("INSERT INTO test_table_37 (id, date, name_, descr) VALUES (?, ?, ?, ?)", data.id, data.date, data.name_, data.descr); err != nil {
+	if _, err = tx.Exec("INSERT INTO test_table_37 (id, date, name_, descr) VALUES (?, ?, ?, ?)",
+		data.id, data.date, data.name_, data.descr); err != nil {
 		return
 	}
 	return
