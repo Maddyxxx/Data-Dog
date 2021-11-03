@@ -8,17 +8,17 @@ import (
 
 const (
 	host     = "localhost"
-	port     = 5433
+	port     = 5432
 	user     = "tester"
 	password = "pivotal"
 	dbname   = "testdb"
+	sslmode  = "disable"
 )
 
 type Data struct {
-	id    int
-	date  string
-	name_ string
-	descr string
+	id   int
+	text string
+	date string
 }
 
 func WriteTodb(db *sql.DB, data Data) (err error) {
@@ -35,8 +35,8 @@ func WriteTodb(db *sql.DB, data Data) (err error) {
 			tx.Rollback()
 		}
 	}()
-	if _, err = tx.Exec("INSERT INTO test_table_37 (id, date, name_, descr) VALUES (?, ?, ?, ?)",
-		data.id, data.date, data.name_, data.descr); err != nil {
+	if _, err = tx.Exec("INSERT INTO test_table (f1, f2, f3) VALUES (?, ?, ?)",
+		data.id, data.text, data.date); err != nil {
 		return
 	}
 	return
@@ -54,7 +54,7 @@ func ReadAllData(db *sql.DB, sql_ string) {
 
 	for rows.Next() {
 		d := Data{}
-		err := rows.Scan(&d.id, &d.date, &d.name_, &d.descr)
+		err := rows.Scan(&d.id, &d.text, &d.date)
 		if err != nil {
 			fmt.Println(err)
 			continue
@@ -62,14 +62,14 @@ func ReadAllData(db *sql.DB, sql_ string) {
 		data = append(data, d)
 	}
 	for _, d := range data {
-		fmt.Println(d.id, d.date, d.name_, d.descr)
+		fmt.Println(d.id, d.text, d.date)
 	}
 }
 
 func main() {
 	connstring := fmt.Sprintf(
-		"host=%s port=%d dbname=%s user=%s password=%s target_session_attrs=read-write",
-		host, port, dbname, user, password)
+		"host=%s port=%d dbname=%s user=%s password=%s sslmode=%s",
+		host, port, dbname, user, password, sslmode)
 	db, err := sql.Open("postgres", connstring)
 	if err != nil {
 		fmt.Printf("Unable to connection to database: %v\n\n", err)
@@ -77,12 +77,11 @@ func main() {
 	defer db.Close()
 
 	data := Data{
-		id:    2,
-		date:  "10-03-2019",
-		name_: "some_random_name",
-		descr: "some_random_text",
+		id:   2,
+		text: "some text",
+		date: "10-03-2019",
 	}
 
 	WriteTodb(db, data)
-	ReadAllData(db, "select * from test_table_37")
+	ReadAllData(db, "select * from test_table")
 }
