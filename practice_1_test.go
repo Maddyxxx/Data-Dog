@@ -15,15 +15,14 @@ func TestWriteTodb1(t *testing.T) {
 	defer db.Close()
 
 	data := Data{
-		id:    5,
-		date:  "10-02-2020",
-		name_: "some_random_name",
-		descr: "some_random_text",
+		id:   5,
+		date: "10-02-2020",
+		text: "some_random_text",
 	}
 
 	mock.ExpectBegin()
 	mock.ExpectExec("INSERT INTO test_table_37").
-		WithArgs(data.id, data.date, data.name_, data.descr).
+		WithArgs(data.id, data.date, data.text).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectCommit()
 

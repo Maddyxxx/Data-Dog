@@ -66,7 +66,7 @@ func ReadAllData(db *sql.DB, sql_ string) {
 	}
 }
 
-func main() {
+func ti_main() {
 	connstring := fmt.Sprintf(
 		"host=%s port=%d dbname=%s user=%s password=%s sslmode=%s",
 		host, port, dbname, user, password, sslmode)
